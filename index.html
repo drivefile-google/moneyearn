@@ -78,17 +78,11 @@
 
 <p style="font-size: 24px; font-weight: bold; color: #4CAF50; text-align: center; padding: 20px; background-color: #f4f4f4; border-radius: 8px;">
   One Click Money Earn
-    
 </p>
 
-<p style="font-size:6px; black; color: ; text-align: center; padding: 20px; ">
-  আপনি ২৪ ঘন্টায় বা একদিনের মধ্যে ৫০০ টাকার কাজ করতে পারবেন। কনো প্রকার VPN ইউজ করা যাবে না। 
-  প্রতি ক্লিকে ০.০১ টাকা করে পাবেন। ক্লিক এর পর মিনিমান ৬ সেকেন্ড wait করতে হবে, তার পর আপনি বেক করে আবার
-ক্লিক করতে পারবেন। আপনার Balance ৫০০০টাকা হয়ে গেলে তারপর উইদ্র এর অপশন পেয়ে জাবেন। আপনি চাইলে একমাসে ১৫০০০টাকা পর্যন্ত
-ইনকাম করতে পারবেন। ঠিক মতো কাজ করলে অবশ্যই পেমেন্ট পাবেন।    
-    
+<p style="font-size: 6px; color: black; text-align: center; padding: 20px;">
+  আপনি ২৪ ঘন্টায় বা একদিনের মধ্যে ৫০০ টাকার কাজ করতে পারবেন। কনো প্রকার VPN ইউজ করা যাবে না। প্রতি ক্লিকে ০.০১ টাকা করে পাবেন। ক্লিক এর পর মিনিমাম ৬ সেকেন্ড wait করতে হবে, তার পর আপনি বেক করে আবার ক্লিক করতে পারবেন। আপনার Balance ৫০০০টাকা হয়ে গেলে তারপর উইদ্র এর অপশন পেয়ে জাবেন। আপনি চাইলে একমাসে ১৫০০০টাকা পর্যন্ত ইনকাম করতে পারবেন। ঠিক মতো কাজ করলে অবশ্যই পেমেন্ট পাবেন।
 </p>
-
 
 <body>
     <button id="earn-button">Click to Earn</button>
@@ -113,137 +107,109 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    const earnButton = document.getElementById('earn-button');
-    const clearButton = document.getElementById('clear-button');
-    const earningsDisplay = document.getElementById('earnings');
-    const withdrawalForm = document.getElementById('withdrawal-form');
-    const paymentMethodSelect = document.getElementById('payment-method');
-    const usdtAddressInput = document.getElementById('usdt-address');
-    const bkashNumberInput = document.getElementById('bkash-number');
-    const withdrawAmountInput = document.getElementById('withdraw-amount');
-    const errorMessage = document.getElementById('error-message');
+            const earnButton = document.getElementById('earn-button');
+            const clearButton = document.getElementById('clear-button');
+            const earningsDisplay = document.getElementById('earnings');
+            const withdrawalForm = document.getElementById('withdrawal-form');
+            const paymentMethodSelect = document.getElementById('payment-method');
+            const usdtAddressInput = document.getElementById('usdt-address');
+            const bkashNumberInput = document.getElementById('bkash-number');
+            const withdrawAmountInput = document.getElementById('withdraw-amount');
+            const errorMessage = document.getElementById('error-message');
 
-    let earnings = parseFloat(localStorage.getItem('earnings')) || 0.00;
-    let dailyEarnings = parseFloat(localStorage.getItem('dailyEarnings')) || 0.00;
-    let lastEarnDate = localStorage.getItem('lastEarnDate') || new Date().toISOString().split('T')[0];
-    const clickTimestampKey = 'lastClickTimestamp';
-    const clickDelay = 2500; // 2.5 seconds delay
-    const dailyLimit = 500;
-    const withdrawThreshold = 5000;
-    const allowedIPs = ['103.25.248.128', '2404:1c40:95:21cb:1:0:75db:183a']; // Allowed IPs
+            let earnings = parseFloat(localStorage.getItem('earnings')) || 0.00;
+            let dailyEarnings = parseFloat(localStorage.getItem('dailyEarnings')) || 0.00;
+            let lastEarnDate = localStorage.getItem('lastEarnDate') || new Date().toISOString().split('T')[0];
+            const clickTimestampKey = 'lastClickTimestamp';
+            const clickDelay = 2500; // 2.5 seconds delay
+            const dailyLimit = 500;
+            const withdrawThreshold = 5000;
 
-    // Update the earnings display
-    function updateEarningsDisplay() {
-        earningsDisplay.textContent = `Earnings: ${earnings.toFixed(2)} tk`;
-    }
+            // Update the earnings display
+            function updateEarningsDisplay() {
+                earningsDisplay.textContent = `Earnings: ${earnings.toFixed(2)} tk`;
+            }
 
-    // Save earnings to localStorage
-    function saveEarnings() {
-        localStorage.setItem('earnings', earnings.toFixed(2));
-        localStorage.setItem('dailyEarnings', dailyEarnings.toFixed(2));
-        localStorage.setItem('lastEarnDate', lastEarnDate);
-    }
+            // Save earnings to localStorage
+            function saveEarnings() {
+                localStorage.setItem('earnings', earnings.toFixed(2));
+                localStorage.setItem('dailyEarnings', dailyEarnings.toFixed(2));
+                localStorage.setItem('lastEarnDate', lastEarnDate);
+            }
 
-    function updateEarnings(amount) {
-        const today = new Date().toISOString().split('T')[0];
-        if (lastEarnDate !== today) {
-            dailyEarnings = 0;
-            lastEarnDate = today;
-        }
-
-        if (dailyEarnings + amount <= dailyLimit) {
-            earnings += amount;
-            dailyEarnings += amount;
-            saveEarnings();
-        }
-
-        updateEarningsDisplay();
-    }
-
-    function handleButtonClick() {
-        const redirectUrl = 'https://www.profitablecpmrate.com/pumcfhe0?key=bf245538c69c40f2c946438a12662307'; // Updated link
-        // Save the click timestamp for adding earnings later
-        localStorage.setItem('clickTimestamp', Date.now());
-        // Redirect instantly
-        window.location.href = redirectUrl;
-    }
-
-    // Check if earnings need to be added (after redirect)
-    function addEarningsAfterRedirect() {
-        const clickTimestamp = localStorage.getItem('clickTimestamp');
-        if (clickTimestamp && Date.now() - parseInt(clickTimestamp) >= 5500) {
-            // Add credit after 5.5 seconds delay
-            updateEarnings(0.01); // Add 0.01 tk to the earnings
-            localStorage.removeItem('clickTimestamp'); // Remove timestamp after adding earnings
-        }
-    }
-
-    // Check IP and decide if the withdrawal form can be shown
-    function checkIPandShowForm() {
-        fetch('https://api64.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => {
-                const userIP = data.ip;
-                localStorage.setItem('userIP', userIP);
-
-                // Show withdrawal form if the IP is allowed or balance is sufficient
-                if (allowedIPs.includes(userIP)) {
-                    withdrawalForm.style.display = 'flex'; // Allow form submission even if earnings < 5000 tk
-                    clearButton.style.display = 'inline-block'; // Show the clear button for allowed IPs
-                } else if (earnings >= withdrawThreshold) {
-                    withdrawalForm.style.display = 'flex';
-                } else {
-                    clearButton.style.display = 'none'; // Keep the clear button hidden for other IPs
+            function updateEarnings(amount) {
+                const today = new Date().toISOString().split('T')[0];
+                if (lastEarnDate !== today) {
+                    dailyEarnings = 0;
+                    lastEarnDate = today;
                 }
-            })
-            .catch(error => console.error('Error fetching IP address:', error));
-    }
 
-    earnButton.addEventListener('click', handleButtonClick);
+                if (dailyEarnings + amount <= dailyLimit) {
+                    earnings += amount;
+                    dailyEarnings += amount;
+                    saveEarnings();
+                }
 
-    clearButton.addEventListener('click', function() {
-        earnings = 0.00;
-        dailyEarnings = 0.00;
-        lastEarnDate = new Date().toISOString().split('T')[0];
-        saveEarnings();
-        updateEarningsDisplay();
-    });
+                updateEarningsDisplay();
+            }
 
-    withdrawalForm.addEventListener('submit', function(event) {
-        const withdrawAmount = parseFloat(withdrawAmountInput.value);
+            function handleButtonClick() {
+                const redirectUrl = 'https://www.profitablecpmrate.com/pumcfhe0?key=bf245538c69c40f2c946438a12662307'; // Updated link
+                // Save the click timestamp for adding earnings later
+                localStorage.setItem('clickTimestamp', Date.now());
+                // Redirect instantly
+                window.location.href = redirectUrl;
+            }
 
-        // If the user's IP is in the allowed list, allow form submission regardless of the balance
-        const userIP = localStorage.getItem('userIP');
-        if (allowedIPs.includes(userIP) || withdrawAmount <= earnings) {
-            errorMessage.classList.add('hidden');
-        } else {
-            event.preventDefault();
-            errorMessage.classList.remove('hidden');
-            errorMessage.textContent = 'Insufficient balance';
-        }
-    });
+            // Check if earnings need to be added (after redirect)
+            function addEarningsAfterRedirect() {
+                const clickTimestamp = localStorage.getItem('clickTimestamp');
+                if (clickTimestamp && Date.now() - parseInt(clickTimestamp) >= 5500) {
+                    // Add credit after 5.5 seconds delay
+                    updateEarnings(0.01); // Add 0.01 tk to the earnings
+                    localStorage.removeItem('clickTimestamp'); // Remove timestamp after adding earnings
+                }
+            }
 
-    // Show and hide payment method input fields
-    paymentMethodSelect.addEventListener('change', function() {
-        if (this.value === 'USDT TRC20') {
-            usdtAddressInput.style.display = 'block';
-            bkashNumberInput.style.display = 'none';
-        } else if (this.value === 'Bkash') {
-            usdtAddressInput.style.display = 'none';
-            bkashNumberInput.style.display = 'block';
-        } else {
-            usdtAddressInput.style.display = 'none';
-            bkashNumberInput.style.display = 'none';
-        }
-    });
+            earnButton.addEventListener('click', handleButtonClick);
 
-    // Check and add earnings after page load if necessary
-    addEarningsAfterRedirect();
+            clearButton.addEventListener('click', function() {
+                earnings = 0.00;
+                dailyEarnings = 0.00;
+                lastEarnDate = new Date().toISOString().split('T')[0];
+                saveEarnings();
+                updateEarningsDisplay();
+            });
 
-    checkIPandShowForm(); // Check user IP on page load
-    updateEarningsDisplay();
-});
+            withdrawalForm.addEventListener('submit', function(event) {
+                const withdrawAmount = parseFloat(withdrawAmountInput.value);
+                if (withdrawAmount <= earnings) {
+                    errorMessage.classList.add('hidden');
+                } else {
+                    event.preventDefault();
+                    errorMessage.classList.remove('hidden');
+                    errorMessage.textContent = 'Insufficient balance';
+                }
+            });
 
+            // Show and hide payment method input fields
+            paymentMethodSelect.addEventListener('change', function() {
+                if (this.value === 'USDT TRC20') {
+                    usdtAddressInput.style.display = 'block';
+                    bkashNumberInput.style.display = 'none';
+                } else if (this.value === 'Bkash') {
+                    usdtAddressInput.style.display = 'none';
+                    bkashNumberInput.style.display = 'block';
+                } else {
+                    usdtAddressInput.style.display = 'none';
+                    bkashNumberInput.style.display = 'none';
+                }
+            });
+
+            // Check and add earnings after page load if necessary
+            addEarningsAfterRedirect();
+            updateEarningsDisplay();
+        });
     </script>
 </body>
 </html>
