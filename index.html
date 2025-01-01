@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Earn by Clicking</title>
     <style>
+        /* Your existing styles */
         body {
             display: flex;
             flex-direction: column;
@@ -38,7 +39,7 @@
         }
 
         #withdrawal-form {
-            display: none;
+            display: flex;
             flex-direction: column;
             margin-top: 20px;
         }
@@ -73,27 +74,87 @@
             color: red;
             margin-top: 10px;
         }
+    
+    /* Popup styles */
+#popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    z-index: 1000;
+    max-width: 80%;
+    box-sizing: border-box;
+}
+
+#popup .message {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+#popup .spinner {
+    border: 4px solid transparent;
+    border-top: 4px solid white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+/* Spinner animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Overlay background */
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
     </style>
 </head>
-
-<p style="font-size: 24px; font-weight: bold; color: #4CAF50; text-align: center; padding: 20px; background-color: #f4f4f4; border-radius: 8px;">
-  One Click Money Earn
-</p>
-
-<p style="font-size:14px; black; color: ; text-align: center; padding: 20px; ">
-  আপনি ২৪ ঘন্টায় বা একদিনের মধ্যে ৫০০ টাকার কাজ করতে পারবেন। কনো প্রকার VPN ইউজ করা যাবে না। 
-  প্রতি ক্লিকে ০.০১ টাকা করে পাবেন। ক্লিক করার সাথে সাথে আপনাকে অন্য একটি ওয়েবসাইটে নিয়ে যাবে,এবং মিনিমান আপনাকে ৬ সেকেন্ড ওই ওয়েবসাইট এ wait করতে হবে, তার পর আপনি বেক করে আবার
-ক্লিক করতে পারবেন। আপনার Balance ৫০০০টাকা হয়ে গেলে তারপর উইদ্র এর অপশন পেয়ে জাবেন। আপনি চাইলে একমাসে ১৫০০০টাকা পর্যন্ত
-ইনকাম করতে পারবেন। ঠিক মতো কাজ করলে অবশ্যই পেমেন্ট পাবেন। 
-    ০১/০২/২০২৫ হইতে মিনিমাম উইড্রয়াল লিমিট ২০০ টাকা করে দেয়া হবে।
-</p>
-
 <body>
+
+    <p style="font-size: 24px; font-weight: bold; color: #4CAF50; text-align: center; padding: 20px; background-color: #f4f4f4; border-radius: 8px;">
+      One Click Money Earn
+    </p>
+
+    <p style="font-size:14px; black; color: ; text-align: center; padding: 20px;">
+      আপনি ২৪ ঘন্টায় বা একদিনের মধ্যে ৫০০ টাকার কাজ করতে পারবেন। কনো প্রকার VPN ইউজ করা যাবে না। 
+      প্রতি ক্লিকে ০.০১ টাকা করে পাবেন। ক্লিক এর পর মিনিমান ৬ সেকেন্ড wait করতে হবে, তার পর আপনি বেক করে আবার
+    ক্লিক করতে পারবেন। আপনার Balance ৫০০০টাকা হয়ে গেলে তারপর উইদ্র এর অপশন পেয়ে জাবেন। আপনি চাইলে একমাসে ১৫০০০টাকা পর্যন্ত
+    ইনকাম করতে পারবেন। ঠিক মতো কাজ করলে অবশ্যই পেমেন্ট পাবেন। 
+    ০১/০২/২০২৫ হইতে মিনিমাম উইড্রয়াল লিমিট ২০০ টাকা করে দেয়া হবে।
+    </p>
+
     <button id="earn-button">Click to Earn</button>
     <p id="earnings">Earnings: 0.00 tk</p>
-    <button id="clear-button" style="display: none;">Clear Earnings</button>
+    <button id="clear-button" style="display: ;">Clear Earnings</button>
 
-    <form id="withdrawal-form" action="https://script.google.com/macros/s/AKfycbxL5PQyxTyGbRZHinDNByDPl_h9H5r8LDTtg0YVxGSCauwBupsBivpg4QnnAjbQtTOMtw/exec" method="POST">
+    <!-- Overlay background -->
+<div id="overlay"></div>
+
+<!-- Popup message -->
+<div id="popup">
+    <div class="message">Processing...</div>
+    <div class="spinner"></div>
+</div>
+
+    
+    <form id="withdrawal-form">
         <input type="text" name="name" placeholder="Enter your name" required>
         <input type="email" name="email" placeholder="Enter your email" required>
         <select id="payment-method" name="payment_method" required>
@@ -103,187 +164,168 @@
         </select>
         <input type="text" id="usdt-address" name="usdt_address" placeholder="Enter USDT TRC20 address" style="display:none;">
         <input type="text" id="bkash-number" name="bkash_number" placeholder="Enter Bkash number" pattern="\d{11}" style="display:none;">
-        <input type="number" id="withdraw-amount" name="amount" placeholder="Enter amount to withdraw" min="5000" required>
+      
+        <!-- Withdrawal Input Field -->
+<input type="number" id="withdraw-amount" name="amount" placeholder="Enter amount to withdraw" step="0.01" min="5000" max="10000" required>
+
+      
         <button type="submit">Submit</button>
     </form>
 
     <p id="error-message" class="error hidden">Insufficient balance</p>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const earnButton = document.getElementById('earn-button');
-            const clearButton = document.getElementById('clear-button');
-            const earningsDisplay = document.getElementById('earnings');
-            const withdrawalForm = document.getElementById('withdrawal-form');
-            const paymentMethodSelect = document.getElementById('payment-method');
-            const usdtAddressInput = document.getElementById('usdt-address');
-            const bkashNumberInput = document.getElementById('bkash-number');
-            const withdrawAmountInput = document.getElementById('withdraw-amount');
-            const errorMessage = document.getElementById('error-message');
+    document.addEventListener('DOMContentLoaded', function () {
+        const earnButton = document.getElementById('earn-button');
+        const clearButton = document.getElementById('clear-button');
+        const earningsDisplay = document.getElementById('earnings');
+        const withdrawalForm = document.getElementById('withdrawal-form');
+        const errorMessage = document.getElementById('error-message');
+        const paymentMethodSelect = document.getElementById('payment-method');
+        const usdtAddressInput = document.getElementById('usdt-address');
+        const bkashNumberInput = document.getElementById('bkash-number');
 
-            let earnings = parseFloat(localStorage.getItem('earnings')) || 0.00;
-            let dailyEarnings = parseFloat(localStorage.getItem('dailyEarnings')) || 0.00;
-            let lastEarnDate = localStorage.getItem('lastEarnDate') || new Date().toISOString().split('T')[0];
-            const clickTimestampKey = 'lastClickTimestamp';
-            const clickDelay = 2500; // 2.5 seconds delay
-            const dailyLimit = 500;
-            const withdrawThreshold = 5000;
-            const allowedIPs = ['103.25.248.128', '2404:1c40:95:21cb:1:0:75db:183a']; // Allowed IPs
+        let earnings = parseFloat(localStorage.getItem('earnings')) || 0.00;
+        const clickDelay = 2500; // 2.5 seconds delay
+        const dailyLimit = 500;
 
-            // Update the earnings display
-            function updateEarningsDisplay() {
-                earningsDisplay.textContent = `Earnings: ${earnings.toFixed(2)} tk`;
+        function updateEarningsDisplay() {
+            earningsDisplay.textContent = `Earnings: ${earnings.toFixed(2)} tk`;
+        }
+
+        function saveEarnings() {
+            localStorage.setItem('earnings', earnings.toFixed(2));
+        }
+
+        function updateEarnings(amount) {
+            earnings += amount;
+            saveEarnings();
+            updateEarningsDisplay();
+        }
+
+        function handleButtonClick() {
+            const redirectUrl = 'https://www.profitablecpmrate.com/f2r84mbx8?key=4418cbf1c016662e2d5ea8e5f1c8a2d4';
+            localStorage.setItem('clickTimestamp', Date.now());
+            window.location.href = redirectUrl;
+        }
+
+        function addEarningsAfterRedirect() {
+            const clickTimestamp = localStorage.getItem('clickTimestamp');
+            if (clickTimestamp && Date.now() - parseInt(clickTimestamp) >= 5500) {
+                updateEarnings(0.01);
+                localStorage.removeItem('clickTimestamp');
             }
+        }
 
-            // Save earnings to localStorage
-            function saveEarnings() {
-                localStorage.setItem('earnings', earnings.toFixed(2));
-                localStorage.setItem('dailyEarnings', dailyEarnings.toFixed(2));
-                localStorage.setItem('lastEarnDate', lastEarnDate);
+        function handleWithdrawal(event) {
+    event.preventDefault();  // Prevent the default form submission
+
+    let withdrawAmount = parseFloat(document.getElementById('withdraw-amount').value);
+    let name = document.querySelector('input[name="name"]').value;
+    let email = document.querySelector('input[name="email"]').value;
+    let paymentMethod = document.getElementById('payment-method').value;
+    let paymentDetails = paymentMethod === "USDT TRC20" ? document.getElementById('usdt-address').value : document.getElementById('bkash-number').value;
+
+    // Validation: Check if the amount is within the 5000 to 10000 range
+if (withdrawAmount < 5000 || withdrawAmount > 10000) {
+    errorMessage.textContent = "Withdrawal amount must be between 5000 and 10000 tk.";
+    errorMessage.classList.remove('hidden');
+    return;  // Stop further execution if validation fails
+}
+
+
+    // Validation: Check if the user has sufficient balance
+    if (withdrawAmount > earnings) {
+        errorMessage.textContent = "Insufficient balance.";
+        errorMessage.classList.remove('hidden');
+        return;  // Stop further execution if insufficient balance
+    }
+
+    // Hide the error message (if any)
+    errorMessage.classList.add('hidden');
+
+    // Create the data to be sent to the server
+    let formData = {
+        name: name,
+        email: email,
+        amount: withdrawAmount,
+        payment_method: paymentMethod,
+        payment_details: paymentDetails
+    };
+
+    // Show the popup with spinner
+    document.getElementById('overlay').style.display = 'block';
+    document.getElementById('popup').style.display = 'block';
+
+    // Send the form data to the server via fetch() (AJAX)
+    fetch('https://script.google.com/macros/s/AKfycbyk6s_jdYBKrjlbx1Ny5leYciSN-S16JFyiPrO-gZExyIMbqma2-yw50c97ERnW5KltNw/exec', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Hide the spinner and overlay after submission
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('popup').style.display = 'none';
+
+        if (data.success) {
+            alert(`Your withdrawal of ${withdrawAmount.toFixed(2)} tk was successful!`);
+
+            // Deduct earnings after a successful withdrawal
+            earnings -= withdrawAmount;
+            saveEarnings();  // Save updated earnings to localStorage
+            updateEarningsDisplay();  // Update the displayed balance
+
+            // Reset the form
+            withdrawalForm.reset();
+        } else {
+            errorMessage.textContent = "There was an error with your withdrawal request.";
+            errorMessage.classList.remove('hidden');
+        }
+    })
+    .catch(error => {
+        // Hide the spinner and overlay if there's an error
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('popup').style.display = 'none';
+
+        console.error('Error submitting the form:', error);
+        errorMessage.textContent = "There was a problem with the submission.";
+        errorMessage.classList.remove('hidden');
+    });
+}
+
+
+        function handlePaymentMethodChange() {
+            const selectedMethod = paymentMethodSelect.value;
+            if (selectedMethod === "USDT TRC20") {
+                usdtAddressInput.style.display = 'block';
+                bkashNumberInput.style.display = 'none';
+            } else if (selectedMethod === "Bkash") {
+                usdtAddressInput.style.display = 'none';
+                bkashNumberInput.style.display = 'block';
+            } else {
+                usdtAddressInput.style.display = 'none';
+                bkashNumberInput.style.display = 'none';
             }
+        }
 
-            function updateEarnings(amount) {
-                const today = new Date().toISOString().split('T')[0];
-                if (lastEarnDate !== today) {
-                    dailyEarnings = 0;
-                    lastEarnDate = today;
-                }
-
-                if (dailyEarnings + amount <= dailyLimit) {
-                    earnings += amount;
-                    dailyEarnings += amount;
-                    saveEarnings();
-                }
-
-                updateEarningsDisplay();
-            }
-
-            function handleButtonClick() {
-                const redirectUrl = 'https://www.profitablecpmrate.com/f2r84mbx8?key=4418cbf1c016662e2d5ea8e5f1c8a2d4'; // Updated link
-                // Save the click timestamp for adding earnings later
-                localStorage.setItem('clickTimestamp', Date.now());
-                // Redirect instantly
-                window.location.href = redirectUrl;
-
-                // Automatically refresh the page after 6 seconds
-                setTimeout(function() {
-                    location.reload();  // This reloads the page after 6 seconds
-                }, 6000);  // 6000 milliseconds = 6 seconds
-            }
-
-            // Check if earnings need to be added (after redirect)
-            function addEarningsAfterRedirect() {
-                const clickTimestamp = localStorage.getItem('clickTimestamp');
-                if (clickTimestamp && Date.now() - parseInt(clickTimestamp) >= 5500) {
-                    // Add credit after 5.5 seconds delay
-                    updateEarnings(0.01); // Add 0.01 tk to the earnings
-                    localStorage.removeItem('clickTimestamp'); // Remove timestamp after adding earnings
-                }
-            }
-
-            // Check IP and decide if the withdrawal form can be shown
-            function checkIPandShowForm() {
-                fetch('https://api64.ipify.org?format=json')
-                    .then(response => response.json())
-                    .then(data => {
-                        const userIP = data.ip;
-                        localStorage.setItem('userIP', userIP);
-
-                        // Show withdrawal form if the IP is allowed or balance is sufficient
-                        if (allowedIPs.includes(userIP)) {
-                            withdrawalForm.style.display = 'flex'; // Allow form submission even if earnings < 5000 tk
-                            clearButton.style.display = 'inline-block'; // Show the clear button for allowed IPs
-                        } else if (earnings >= withdrawThreshold) {
-                            withdrawalForm.style.display = 'flex';
-                        } else {
-                            clearButton.style.display = 'none'; // Keep the clear button hidden for other IPs
-                        }
-                    })
-                    .catch(error => console.error('Error fetching IP address:', error));
-            }
-
-            earnButton.addEventListener('click', handleButtonClick);
-
-            clearButton.addEventListener('click', function() {
-                earnings = 0.00;
-                dailyEarnings = 0.00;
-                lastEarnDate = new Date().toISOString().split('T')[0];
-                saveEarnings();
-                updateEarningsDisplay();
-            });
-
-            withdrawalForm.addEventListener('submit', function(event) {
-                const withdrawAmount = parseFloat(withdrawAmountInput.value);
-
-                // If the user's IP is in the allowed list, allow form submission regardless of the balance
-                const userIP = localStorage.getItem('userIP');
-                if (allowedIPs.includes(userIP) || withdrawAmount <= earnings) {
-                    errorMessage.classList.add('hidden');
-                } else {
-                    event.preventDefault();
-                    errorMessage.classList.remove('hidden');
-                    errorMessage.textContent = 'Insufficient balance';
-                }
-            });
-
-            // Show and hide payment method input fields
-            paymentMethodSelect.addEventListener('change', function() {
-                if (this.value === 'USDT TRC20') {
-                    usdtAddressInput.style.display = 'block';
-                    bkashNumberInput.style.display = 'none';
-                } else if (this.value === 'Bkash') {
-                    usdtAddressInput.style.display = 'none';
-                    bkashNumberInput.style.display = 'block';
-                } else {
-                    usdtAddressInput.style.display = 'none';
-                    bkashNumberInput.style.display = 'none';
-                }
-            });
-
-            // Check and add earnings after page load if necessary
-            addEarningsAfterRedirect();
-
-            checkIPandShowForm(); // Check user IP on page load
+        earnButton.addEventListener('click', handleButtonClick);
+        clearButton.addEventListener('click', function() {
+            earnings = 0.00;
+            saveEarnings();
             updateEarningsDisplay();
         });
+
+        withdrawalForm.addEventListener('submit', handleWithdrawal);
+        paymentMethodSelect.addEventListener('change', handlePaymentMethodChange);
+
+        addEarningsAfterRedirect();
+        updateEarningsDisplay();
+    });
     </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    var overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-    overlay.style.color = 'white';
-    overlay.style.display = 'flex';
-    overlay.style.alignItems = 'center';
-    overlay.style.justifyContent = 'center';
-    overlay.style.zIndex = '1000';
-
-    var overlayContent = document.createElement('div');
-    overlayContent.style.textAlign = 'center';
-
-    var header = document.createElement('h1');
-    header.style.fontSize = '3em';
-    header.style.margin = '0';
-    header.textContent = 'Server Under Maintenance';
-
-    var paragraph = document.createElement('p');
-    paragraph.style.fontSize = '1.5em';
-    paragraph.textContent = 'We apologize for the inconvenience. Please try again later.';
-
-    overlayContent.appendChild(header);
-    overlayContent.appendChild(paragraph);
-    overlay.appendChild(overlayContent);
-
-    document.body.appendChild(overlay);
-});
-
-</script>
-
-    
 </body>
-</html>
+</html> 
